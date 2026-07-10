@@ -8,7 +8,7 @@ const endInput = document.getElementById('endDate');
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
 
-
+// NASA API Key
 const apiKey = "hAChtLippT7Dc174sla7DyQ3VRrdEt7rdT3on7N6";
 
 const gallery = document.getElementById("gallery");
@@ -26,12 +26,11 @@ const spaceFacts = [
   "Mars has the tallest volcano in the solar system."
 ];
 
-// Display random fact if the element exists
+// Display random fact
 const factSection = document.getElementById("spaceFact");
 
 if (factSection) {
-  const randomFact =
-    spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
+  const randomFact = spaceFacts[Math.floor(Math.random() * spaceFacts.length)];
 
   factSection.innerHTML = `
     <h2>🚀 Did You Know?</h2>
@@ -39,15 +38,18 @@ if (factSection) {
   `;
 }
 
-// Load images when button is clicked
+// Load images
 button.addEventListener("click", getSpaceImages);
 
 async function getSpaceImages() {
 
-  gallery.innerHTML = "<h2>🔄 Loading space photos...</h2>";
+  gallery.innerHTML = `
+    <div class="loading">
+      🔄 Loading space photos...
+    </div>
+  `;
 
-  const url =
-    `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&start_date=${startInput.value}&end_date=${endInput.value}`;
+  const url = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&start_date=${startInput.value}&end_date=${endInput.value}`;
 
   try {
 
@@ -56,7 +58,6 @@ async function getSpaceImages() {
 
     gallery.innerHTML = "";
 
-    // Show newest images first
     data.reverse();
 
     data.forEach(photo => {
@@ -64,7 +65,7 @@ async function getSpaceImages() {
       const card = document.createElement("div");
       card.classList.add("gallery-item");
 
-      // Handle images
+      // IMAGE
       if (photo.media_type === "image") {
 
         card.innerHTML = `
@@ -79,20 +80,20 @@ async function getSpaceImages() {
 
       }
 
-      // Handle videos 
-      else if (photo.media_type === "video") {
+      // VIDEO
+      // Handle videos
+else if (photo.media_type === "video") {
 
-        card.innerHTML = `
-          <iframe
-            src="${photo.url}"
-            frameborder="0"
-            allowfullscreen>
-          </iframe>
+  card.innerHTML = `
+    <a href="${photo.url}" target="_blank" class="video-thumbnail">
+      <img src="img/NASA-Logo-Large.jpg" alt="NASA Video">
+      <div class="play-button">▶</div>
+    </a>
 
-          <h3>${photo.title}</h3>
-          <p>${photo.date}</p>
-        `;
-      }
+    <h3>${photo.title}</h3>
+    <p>${photo.date}</p>
+  `;
+}
 
       gallery.appendChild(card);
 
@@ -102,7 +103,7 @@ async function getSpaceImages() {
 
   catch (error) {
 
-    console.log(error);
+    console.error(error);
 
     gallery.innerHTML = `
       <div class="placeholder">
@@ -114,41 +115,30 @@ async function getSpaceImages() {
 
 }
 
-// Opens the modal
+// Modal
 function openModal(photo) {
 
-  document.getElementById("modalImage").src =
-    photo.hdurl || photo.url;
-
-  document.getElementById("modalTitle").textContent =
-    photo.title;
-
-  document.getElementById("modalDate").textContent =
-    photo.date;
-
-  document.getElementById("modalDescription").textContent =
-    photo.explanation;
+  document.getElementById("modalImage").src = photo.hdurl || photo.url;
+  document.getElementById("modalTitle").textContent = photo.title;
+  document.getElementById("modalDate").textContent = photo.date;
+  document.getElementById("modalDescription").textContent = photo.explanation;
 
   document.getElementById("imageModal").style.display = "flex";
 
 }
 
-// Close modal button
+// Close button
 document.getElementById("closeModal").addEventListener("click", () => {
-
   document.getElementById("imageModal").style.display = "none";
-
 });
 
-// Close modal when clicking outside
+// Close when clicking outside
 window.addEventListener("click", (event) => {
 
   const modal = document.getElementById("imageModal");
 
   if (event.target === modal) {
-
     modal.style.display = "none";
-
   }
 
 });
