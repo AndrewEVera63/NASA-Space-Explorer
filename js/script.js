@@ -8,9 +8,7 @@ const endInput = document.getElementById('endDate');
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
 
-// NASA API Key
 const apiKey = "hAChtLippT7Dc174sla7DyQ3VRrdEt7rdT3on7N6";
-
 const gallery = document.getElementById("gallery");
 const button = document.querySelector("button");
 
@@ -84,15 +82,18 @@ async function getSpaceImages() {
       // Handle videos
 else if (photo.media_type === "video") {
 
-  card.innerHTML = `
-    <a href="${photo.url}" target="_blank" class="video-thumbnail">
-      <img src="img/NASA-Logo-Large.jpg" alt="NASA Video">
-      <div class="play-button">▶</div>
-    </a>
+    card.innerHTML = `
+        <img src="img/NASA-Logo-Large.jpg" alt="NASA Video">
 
-    <h3>${photo.title}</h3>
-    <p>${photo.date}</p>
-  `;
+        <h3>${photo.title}</h3>
+
+        <p>${photo.date}</p>
+    `;
+
+    card.addEventListener("click", () => {
+        openModal(photo);
+    });
+
 }
 
       gallery.appendChild(card);
@@ -118,10 +119,42 @@ else if (photo.media_type === "video") {
 // Modal
 function openModal(photo) {
 
-  document.getElementById("modalImage").src = photo.hdurl || photo.url;
-  document.getElementById("modalTitle").textContent = photo.title;
-  document.getElementById("modalDate").textContent = photo.date;
-  document.getElementById("modalDescription").textContent = photo.explanation;
+  const modalImage = document.getElementById("modalImage");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalDate = document.getElementById("modalDate");
+  const modalDescription = document.getElementById("modalDescription");
+
+  modalTitle.textContent = photo.title;
+  modalDate.textContent = photo.date;
+  modalDescription.textContent = photo.explanation;
+
+ if (photo.media_type === "image") {
+
+    modalImage.style.display = "block";
+    
+
+    document.getElementById("videoLink").style.display = "none";
+
+    modalImage.src = photo.hdurl || photo.url;
+
+}
+
+  else if (photo.media_type === "video") {
+
+    // Hide the iframe
+    modalVideo.style.display = "none";
+    
+
+    // Show the NASA logo instead
+    modalImage.style.display = "block";
+    modalImage.src = "img/NASA-Logo-Large.jpg";
+
+    // Show the watch video link
+    const videoLink = document.getElementById("videoLink");
+    videoLink.href = photo.url;
+    videoLink.style.display = "inline-block";
+
+}
 
   document.getElementById("imageModal").style.display = "flex";
 
@@ -135,10 +168,13 @@ document.getElementById("closeModal").addEventListener("click", () => {
 // Close when clicking outside
 window.addEventListener("click", (event) => {
 
-  const modal = document.getElementById("imageModal");
+    const modal = document.getElementById("imageModal");
 
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
+    if (event.target === modal) {
+
+        modal.style.display = "none";
+        document.getElementById("modalVideo").src = "";
+
+    }
 
 });

@@ -20,12 +20,26 @@
     </div>
 <div id="spaceFact" class="space-fact"></div>
     <div id="gallery" class="gallery">
-<div id="imageModal" class="modal">
+      <div class="placeholder">
+        <div class="placeholder-icon">🔭</div>
+        <p>Select a date range and click "Get Space Images" to explore the cosmos!</p>
+      </div>
+    </div>
+
+    <div id="imageModal" class="modal">
   <div class="modal-content">
 
     <span id="closeModal">&times;</span>
 
+   <div class="video-container">
+
     <img id="modalImage" alt="NASA Image">
+
+    <a id="videoLink" class="video-overlay" target="_blank" style="display:none;">
+        <div class="play-button">▶</div>
+    </a>
+
+</div>
 
     <h2 id="modalTitle"></h2>
 
@@ -35,11 +49,6 @@
 
   </div>
 </div>
-      <div class="placeholder">
-        <div class="placeholder-icon">🔭</div>
-        <p>Select a date range and click "Get Space Images" to explore the cosmos!</p>
-      </div>
-    </div>
   </div>
 
 
